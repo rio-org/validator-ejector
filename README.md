@@ -134,9 +134,6 @@ Available metrics:
 - Invalid files in messages folder are noticed
 - Exit JSON structure is checked
 - Exit signature is fully validated
-- Exit event pubkeys are checked to exist in transaction data
-- Exit event report data hashes are checked to match hashes in original submitReport() Oracle transactions
-- Exit events original consensus transactions are checked to be signed by allowlisted Oracles
+- Exit event pubkeys are pulled directly from OperatorRegistry contract events
 - Node requests are repeated on error or timeouts
-- Amount of messages left to send out can be checked using metrics
 - Dry run mode to test setup
