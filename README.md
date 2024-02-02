@@ -4,7 +4,7 @@
 
 Daemon service which loads OperatorRegistry events for validator exits and sends out exit messages when necessary. On start, it will load events from a configurable amount of blocks behind and then poll for new events.
 
-This software is a modified version of [Lido's Validator Ejector](https://github.com/lidofinance/validator-ejector).
+This software is modified from [Lido's Validator Ejector](https://github.com/lidofinance/validator-ejector).
 
 ## Requirements
 
