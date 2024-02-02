@@ -122,14 +122,11 @@ Available metrics:
 
 - exit_messages: ['valid'] - Exit messages and their validity: JSON parseability, structure and signature
 - exit_actions: ['result'] - Statuses of initiated validator exits
-- event_security_verification: ['result'] - Statuses of exit event security verifications
 - polling_last_blocks_duration_seconds: ['eventsNumber'] - Duration of pooling last blocks in microseconds
 - execution_request_duration_seconds: ['result', 'status', 'domain'] - Execution node request duration in microseconds
 - consensus_request_duration_seconds: ['result', 'status', 'domain'] - Consensus node request duration in microseconds
 - job_duration_seconds: ['name', 'interval', 'result'] - Duration of Ejector cycle cron job
 - job_message_reloader_duration_seconds: ['name', 'interval', 'result'] - Duration of Pre-signed message reloader cron job
-- exit_messages_left_number - Number of exit messages left
-- exit_messages_left_percent - Percentage of exit messages left
 
 ## Safety Features
 

@@ -32,15 +32,6 @@ export const makeMetrics = ({
   exitActions.labels('success').inc(0)
   exitActions.labels('error').inc(0)
 
-  const eventSecurityVerification = new client.Counter({
-    name: PREFIX + 'event_security_verification',
-    help: 'Statuses of exit event security verifications',
-    labelNames: ['result'] as const,
-  })
-  register.registerMetric(eventSecurityVerification)
-  eventSecurityVerification.labels('success').inc(0)
-  eventSecurityVerification.labels('error').inc(0)
-
   const pollingLastBlocksDurationSeconds = new client.Histogram({
     name: PREFIX + 'polling_last_blocks_duration_seconds',
     help: 'Duration of polling last blocks in seconds',
@@ -80,12 +71,6 @@ export const makeMetrics = ({
     buckets: [0.1, 0.2, 0.5, 1, 2, 5, 10, 15, 20],
   })
   register.registerMetric(jobEjectorCycleDuration)
-
-  const exitMessagesLeftNumber = new client.Gauge({
-    name: PREFIX + 'exit_messages_left_number',
-    help: 'Number of exit messages left',
-  })
-  register.registerMetric(exitMessagesLeftNumber)
 
   const exitMessagesLeftPercent = new client.Gauge({
     name: PREFIX + 'exit_messages_left_percent',
