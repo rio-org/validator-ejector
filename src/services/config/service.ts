@@ -27,22 +27,13 @@ export const makeConfig = ({
       env.CONSENSUS_NODE,
       'Please, setup CONSENSUS_NODE address. Example: http://1.2.3.4:5051'
     ),
-    LOCATOR_ADDRESS: str(
-      env.LOCATOR_ADDRESS,
-      'Please, setup LOCATOR_ADDRESS address. Example: 0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-    ),
-    STAKING_MODULE_ID: str(
-      env.STAKING_MODULE_ID,
-      'Please, setup STAKING_MODULE_ID id. Example: 123'
+    OPERATOR_REGISTRY_ADDRESS: str(
+      env.OPERATOR_REGISTRY_ADDRESS,
+      'Please, setup OPERATOR_REGISTRY_ADDRESS address. Example: 0xXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
     ),
     OPERATOR_ID: str(
       env.OPERATOR_ID,
       'Please, setup OPERATOR_ID id. Example: 123'
-    ),
-    ORACLE_ADDRESSES_ALLOWLIST: json_arr(
-      env.ORACLE_ADDRESSES_ALLOWLIST,
-      (oracles) => oracles.map(str),
-      'Please, setup ORACLE_ADDRESSES_ALLOWLIST. Example: ["0x123","0x123"]'
     ),
 
     MESSAGES_LOCATION: optional(() => str(env.MESSAGES_LOCATION)),
@@ -59,9 +50,6 @@ export const makeConfig = ({
     RUN_HEALTH_CHECK: optional(() => bool(env.RUN_HEALTH_CHECK)) ?? true,
 
     DRY_RUN: optional(() => bool(env.DRY_RUN)) ?? false,
-    DISABLE_SECURITY_DONT_USE_IN_PRODUCTION:
-      optional(() => bool(env.DISABLE_SECURITY_DONT_USE_IN_PRODUCTION)) ??
-      false,
     PROM_PREFIX: optional(() => str(env.PROM_PREFIX)),
   }
 

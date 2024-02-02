@@ -1,14 +1,14 @@
 <img src="https://user-images.githubusercontent.com/4752441/209329469-aee5d699-af5e-467b-9213-4d09b1a22012.png" width="50%" height="50%">
 
-# Lido Validator Ejector
+# Rio Validator Ejector
 
-Daemon service which loads LidoOracle events for validator exits and sends out exit messages when necessary.
+Daemon service which loads OperatorRegistry events for validator exits and sends out exit messages when necessary. On start, it will load events from a configurable amount of blocks behind and then poll for new events.
 
-On start, it will load events from a configurable amount of blocks behind and then poll for new events.
+This software is a modified version of [Lido's Validator Ejector](https://github.com/lidofinance/validator-ejector).
 
 ## Requirements
 
-- Folder of pre-signed exit messages as individual JSON files in either [spec format](https://github.com/lidofinance/validator-ejector/blob/d2e4db190935239e019618b948a1bd1cea20f88f/src/services/messages-processor/service.ts#L19-L25) (generic) or [ethdo output format](https://github.com/wealdtech/ethdo/blob/master/docs/usage.md#exit)
+- Folder of pre-signed exit messages as individual JSON files in either [spec format](https://github.com/rio-org/validator-ejector/blob/d2e4db190935239e019618b948a1bd1cea20f88f/src/services/messages-processor/service.ts#L19-L25) (generic) or [ethdo output format](https://github.com/wealdtech/ethdo/blob/master/docs/usage.md#exit)
 - Execution node
 - Consensus node
 
@@ -53,12 +53,10 @@ Options are configured via environment variables.
 |--------------------------------| -------- | --------------------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | EXECUTION_NODE                 | Yes      | http://1.2.3.4:8545   | Ethereum Execution Node endpoint                                                                                                                                                                                                                        |
 | CONSENSUS_NODE                 | Yes      | http://1.2.3.4:5051   | Ethereum Consensus Node endpoint                                                                                                                                                                                                                        |
-| LOCATOR_ADDRESS                | Yes      | 0x123                 | Address of the Locator contract [Goerli](https://docs.lido.fi/deployed-contracts/goerli/) / [Mainnet](https://docs.lido.fi/deployed-contracts/)                                                                                                         |
-| STAKING_MODULE_ID              | Yes      | 123                   | Staking Module ID for which operator ID is set, currently only one exists - ([NodeOperatorsRegistry](https://github.com/lidofinance/lido-dao#contracts)) with id `1`                                                                                    |
-| OPERATOR_ID                    | Yes      | 123                   | Operator ID in the Node Operators registry, easiest to get from Operators UI: [Goerli](https://operators.testnet.fi)/[Mainnet](https://operators.lido.fi)                                                                                               |
+| OPERATOR_REGISTRY_ADDRESS      | Yes      | 0x123                 | Address of the Operator Registry contract: [Goerli](https://goerli.etherscan.io/address/0x8Abf8aB35915457219B801a774140f067DdB0705)                        |
+| OPERATOR_ID                    | Yes      | 123                   | Operator ID in the Operator Registry, provided to you by the RioDAO, and available in the Rio Network Subgraph: [Goerli](https://thegraph.com/hosted-service/subgraph/rio-org/rio-network-goerli)                                                                         |
 | MESSAGES_LOCATION              | No       | messages              | Local folder or external storage bucket url to load json exit message files from. Required if you are using exit messages mode                                                                                                                          |
 | VALIDATOR_EXIT_WEBHOOK         | No       | http://webhook        | POST validator info to an endpoint instead of sending out an exit message in order to initiate an exit. Required if you are using webhook mode                                                                                                          |
-| ORACLE_ADDRESSES_ALLOWLIST     | Yes      | ["0x123"]             | Allowed Oracle addresses to accept transactions from [Goerli](https://testnet.testnet.fi/#/lido-testnet-prater/0x24d8451bc07e7af4ba94f69acdd9ad3c6579d9fb/) / [Mainnet](https://mainnet.lido.fi/#/lido-dao/0x442af784a788a5bd6f42a01ebe9f287a871243fb/) |
 | MESSAGES_PASSWORD              | No       | password              | Password to decrypt encrypted exit messages with. Needed only if you encrypt your exit messages                                                                                                                                                         |
 | MESSAGES_PASSWORD_FILE         | No       | password_inside.txt   | Path to a file with password inside to decrypt exit messages with. Needed only if you have encrypted exit messages. If used, MESSAGES_PASSWORD (not MESSAGES_PASSWORD_FILE) needs to be added to LOGGER_SECRETS in order to be sanitized                |
 | BLOCKS_PRELOAD                 | No       | 50000                 | Amount of blocks to load events from on start. Increase if daemon was not running for some time. Defaults to a week of blocks                                                                                                                           |
@@ -101,11 +99,11 @@ Done, your encrypted files will be in `encryptor/output`.
 
 Either:
 
-- Use a Docker image from [Docker Hub](https://hub.docker.com/r/lidofinance/validator-ejector)
+- Use a Docker image from [Docker Hub](https://hub.docker.com/r/rioorg/validator-ejector)
 - Clone repo, install dependencies, build and start the service:
 
 ```bash
-git clone https://github.com/lidofinance/validator-ejector.git
+git clone https://github.com/rio-org/validator-ejector.git
 cd validator-ejector
 yarn
 yarn build

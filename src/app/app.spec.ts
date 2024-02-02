@@ -5,6 +5,7 @@ import * as ELMocks from '../services/execution-api/fixtures.js'
 import * as CLMocks from '../services/consensus-api/fixtures.js'
 import dotenv from 'dotenv'
 import { configBase } from '../test/config.js'
+import { syncingMock } from '../services/execution-api/fixtures.js'
 
 dotenv.config()
 
@@ -66,11 +67,14 @@ describe('App bootstrap', () => {
   })
 
   it('should bootstrap the app with VALIDATOR_EXIT_WEBHOOK', async () => {
+    const EXECUTION_NODE = 'http://localhost:4455'
     await mockConfig({
       MESSAGES_LOCATION: undefined,
       VALIDATOR_EXIT_WEBHOOK: 'https://example.com/webhook',
       PROM_PREFIX: 'test_2',
+      EXECUTION_NODE,
     })
+    mockEthServer(syncingMock(), EXECUTION_NODE)
 
     const module = await getApp()
     await module.run()

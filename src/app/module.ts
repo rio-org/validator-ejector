@@ -53,8 +53,7 @@ export const makeAppModule = async () => {
       abort(30_000),
     ]),
     logger,
-    config,
-    metrics
+    config
   )
 
   const consensusApi = makeConsensusApi(
