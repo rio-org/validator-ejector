@@ -16,7 +16,7 @@ describe('makeConsensusApi logs', () => {
     request = makeRequest([])
     logger = mockLogger()
     config = mockConfig(logger, {
-      EXECUTION_NODE: 'http://localhost:4455',
+      EXECUTION_NODE: 'http://localhost:4445',
     })
     api = makeExecutionApi(request, logger, config)
   })
