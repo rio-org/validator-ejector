@@ -7,6 +7,7 @@ import type { WebhookProcessorService } from '../webhook-caller/service.js'
 import type { MetricsService } from '../prom/service.js'
 import type { MessageStorage } from './message-storage.js'
 import type { MessageReloader } from '../message-reloader/message-reloader.js'
+import retry from 'async-retry'
 
 export type ExitMessage = {
   message: {
@@ -54,14 +55,10 @@ export const makeJobProcessor = ({
   }) => {
     logger.info('Job started', {
       operatorId: config.OPERATOR_ID,
-      stakingModuleId: config.STAKING_MODULE_ID,
+      operatorRegistry: config.OPERATOR_REGISTRY_ADDRESS,
     })
 
     await messageReloader.reloadAndVerifyMessages(messageStorage)
-
-    // Resolving contract addresses on each job to automatically pick up changes without requiring a restart
-    await executionApi.resolveExitBusAddress()
-    await executionApi.resolveConsensusAddress()
 
     const toBlock = await executionApi.latestBlockNumber()
     const fromBlock = toBlock - eventsNumber
@@ -73,17 +70,20 @@ export const makeJobProcessor = ({
       toBlock,
     })
 
-    const eventsForEject = await executionApi.logs(fromBlock, toBlock)
+    const validatorPubkeysForEject = await executionApi.logs(fromBlock, toBlock)
 
     logger.info('Handling ejection requests', {
-      amount: eventsForEject.length,
+      amount: validatorPubkeysForEject.length,
     })
 
-    for (const [ix, event] of eventsForEject.entries()) {
-      logger.info(`Handling exit ${ix + 1}/${eventsForEject.length}`, event)
+    for (const [ix, validatorPubkey] of validatorPubkeysForEject.entries()) {
+      logger.info(
+        `Handling exit ${ix + 1}/${validatorPubkeysForEject.length}`,
+        validatorPubkey
+      )
 
       try {
-        if (await consensusApi.isExiting(event.validatorPubkey)) {
+        if (await consensusApi.isExiting(validatorPubkey)) {
           logger.info('Validator is already exiting(ed), skipping')
           continue
         }
@@ -93,28 +93,26 @@ export const makeJobProcessor = ({
           continue
         }
 
+        const { index: validatorIndex } = await retry(
+          async () => consensusApi.validatorInfo(validatorPubkey),
+          {
+            factor: 1.2,
+          }
+        )
+        const validator = {
+          validatorPubkey,
+          validatorIndex,
+        }
         if (config.VALIDATOR_EXIT_WEBHOOK) {
-          await webhookProcessor.send(config.VALIDATOR_EXIT_WEBHOOK, event)
+          await webhookProcessor.send(config.VALIDATOR_EXIT_WEBHOOK, validator)
         } else {
-          await messagesProcessor.exit(messageStorage, event)
+          await messagesProcessor.exit(messageStorage, validator)
         }
       } catch (e) {
-        logger.error(`Unable to process exit for ${event.validatorPubkey}`, e)
+        logger.error(`Unable to process exit for ${validatorPubkey}`, e)
         metrics.exitActions.inc({ result: 'error' })
       }
     }
-
-    logger.info('Updating exit messages left metrics from contract state')
-    try {
-      const lastRequestedValIx =
-        await executionApi.lastRequestedValidatorIndex()
-      metrics.updateLeftMessages(messageStorage, lastRequestedValIx)
-    } catch {
-      logger.error(
-        'Unable to update exit messages left metrics from contract state'
-      )
-    }
-
     logger.info('Job finished')
   }
 

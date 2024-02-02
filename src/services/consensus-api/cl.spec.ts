@@ -21,7 +21,7 @@ describe('makeConsensusApi', () => {
   beforeEach(() => {
     request = makeRequest([])
     logger = mockLogger()
-    config = mockConfig(logger, { CONSENSUS_NODE: 'http://localhost:4445' })
+    config = mockConfig(logger, { CONSENSUS_NODE: 'http://localhost:4455' })
     api = makeConsensusApi(request, logger, config)
   })
 
