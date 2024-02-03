@@ -1,8 +1,8 @@
 version: '3.7'
 services:
   app:
-    # get last hash from https://docs.lido.fi/guides/tooling#validator-ejector
-    image: rioorg/validator-ejector@<latest-hash>
+    # get last hash from https://hub.docker.com/r/rioorg/validatorejector/tags
+    image: rioorg/validator-ejector@<latest-tag>
     container_name: validator-ejector
     restart: unless-stopped
     environment:
