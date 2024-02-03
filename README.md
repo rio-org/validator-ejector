@@ -32,7 +32,7 @@ In this mode, Ejector will make a request to a specified endpoint when an exit n
 
 Mode is activated by setting the VALIDATOR_EXIT_WEBHOOK variable.
 
-This allows NOs to implement JIT approach by offloading exiting logic to an external service and using the Ejector as a secure exit events reader.
+This allows operators to implement JIT approach by offloading exiting logic to an external service and using the Validator Ejector as a secure exit events reader.
 
 On the endpoint, JSON will be POSTed with the following structure:
 
