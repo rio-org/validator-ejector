@@ -2,7 +2,7 @@
 
 # Rio Validator Ejector
 
-A daemon service which loads Operator Registry events for validator exits and sends out exit messages when necessary. On start, it will load events from a configurable amount of blocks behind and then poll for new events.
+A daemon service which loads Rio Network `RioLRTOperatorRegistry` events for validator exits and sends out exit messages when necessary. On start, it will load events from a configurable amount of blocks behind and then poll for new events.
 
 This software is modified from [Lido's Validator Ejector](https://github.com/lidofinance/validator-ejector).
 
