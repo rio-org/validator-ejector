@@ -64,7 +64,7 @@ export const makeJobProcessor = ({
     const fromBlock = toBlock - eventsNumber
     logger.info('Fetched the latest block from EL', { latestBlock: toBlock })
 
-    logger.info('Fetching request events from the Exit Bus', {
+    logger.info('Fetching request events from the Operator Registry', {
       eventsNumber,
       fromBlock,
       toBlock,
